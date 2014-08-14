@@ -1,11 +1,12 @@
 ;License:
-;	This script is distributed under the MIT License
+;   MIT License
 ;
-;Author:
-; oscar.tejera
+;Original Author: oscar.tejera
+;   github: @ohtejera
 ;
-;Description:;
-;Include core files
+;
+;Description:
+;   Include core files
 
 #Region include
 #include-once

@@ -1,11 +1,11 @@
 ;License:
-;	This script is distributed under the MIT License
+;   MIT License
 ;
-;Author:
-;	oscar.tejera
+;Original Author: oscar.tejera
+;   github: @ohtejera
 ;
 ;Description:
-; Simple test suite module
+;   Simple test suite module
 
 Global $aResult[2]
 $aResult[0] = "fail"

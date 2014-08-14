@@ -1,19 +1,12 @@
 ;License:
-;	This script is distributed under the MIT License
+;   MIT License
 ;
-;Author:
-;	oscar.tejera
+;Original Author: oscar.tejera
+;   github: @ohtejera
 ;
 ;Description:
-; Simple test module
-;Function: _test_
-;Test object
-;
-;Parameters:
-;	$sTestName - String Test name
-;
-;Returns:
-;	Test object
+;   Simple test module
+
 
 Global $aResult[2]
 $aResult[0] = "fail"
@@ -24,6 +17,14 @@ Global $sHTMLTemplate = "/lib/report.html"
 ;Initializes
 _AutoItObject_Startup()
 
+;Function: _test_
+;   Test object
+;
+;Parameters:
+;	$sTestName - String Test name
+;
+;Returns:
+;	Test object
 Func _test_($sTestName)
 	Local $oClassObject = _AutoItObject_Class()
 	Local $dicSteps = ObjCreate("Scripting.Dictionary")
