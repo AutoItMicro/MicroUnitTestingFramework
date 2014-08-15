@@ -58,7 +58,7 @@ Func _test_($sTestName)
 		.AddProperty("Steps", $ELSCOPE_PUBLIC, $dicSteps) ;Dictionary with test case steps
 		.AddProperty("StepCount",$ELSCOPE_PRIVATE,0)
 		.AddProperty("TestResult",$ELSCOPE_PRIVATE,1) ;0 Failed - 1 OK
-        .AddProperty("TestResultText",$ELSCOPE_PRIVATE,1) ;0 Failed - 1 OK
+        .AddProperty("TestResultText",$ELSCOPE_PRIVATE,"pass") ;0 Failed - 1 OK
 		.AddProperty("TestStepFailed",$ELSCOPE_PRIVATE,0)
 		.AddProperty("TestStepPassed",$ELSCOPE_PRIVATE,0)
 		.AddProperty("TestStart",$ELSCOPE_PUBLIC,_NowCalc())
@@ -144,6 +144,7 @@ Func _addStepResult($this,$sStepName,$iResult)
 
     If $iResult = 0 Then
 		$this.TestResult = 0
+        $this.TestResultText = "fail"
 		$this.TestStepFailed = $this.TestStepFailed + 1
 	Else
 		$this.TestStepPassed = $this.TestStepPassed + 1

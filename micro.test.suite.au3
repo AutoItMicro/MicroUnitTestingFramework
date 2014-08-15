@@ -23,7 +23,7 @@ _AutoItObject_Startup()
 ;
 ;Returns:
 ;	Test object
-Func _testSuite_($sSuiteName, $sReportFormat = "txt")
+Func _testSuite_($suiteName)
 	Local $oClassObject = _AutoItObject_Class()
 	Local $dicTest = ObjCreate("Scripting.Dictionary")
 	Local $hFile
@@ -31,36 +31,18 @@ Func _testSuite_($sSuiteName, $sReportFormat = "txt")
 	Local $sReportContent
 	$oClassObject.Create()
 
-	If($sReportFormat = "html") Then
-		 $sReportFilePath = @ScriptDir & "\" & $sSuiteName & "." & $sReportFormat
-		 FileCopy(@ScriptDir & $sHTMLTemplate,$sReportFilePath,1)
-		 ;Set title
-		 $sReportContent = FileRead($sReportFilePath);
-		 FileClose($sReportFilePath)
-		 ;Write mode (erase previous contents)
-		 $hFile = FileOpen($sReportFilePath,2)
-		 $sReportContent = StringReplace($sReportContent,"<{$TestSuiteTitle>",$sSuiteName,0)
-		 FileWrite($hFile,$sReportContent)
-		 FileClose($hFile)
-
-	 Else ;txt format
-		 $sReportFormat = "txt"
-		 $sReportFilePath = @ScriptDir & "\" & $sSuiteName & "." & $sReportFormat
-		 $hFile = FileOpen($sReportFilePath,2)
-		 FileClose($hFile)
-	EndIf
-
 	;Methods
 	With $oClassObject
 		.AddMethod("stop", "_Stop")
 		.AddMethod("addTest", "_AddTest")
 		.AddMethod("countTest", "_CountTests")
+        .AddMethod("setReportFormat","_setReportFormat")
 	EndWith
 
 	;Property
 	With $oClassObject
 		.AddProperty("_type_", $ELSCOPE_PUBLIC, "_testSuite_") ;Object type
-		.AddProperty("name", $ELSCOPE_PUBLIC, $sSuiteName)
+		.AddProperty("name", $ELSCOPE_PUBLIC, $suiteName)
 		.AddProperty("format", $ELSCOPE_PUBLIC, $sReportFormat)
 		.AddProperty("reportFilePath", $ELSCOPE_PUBLIC, $sReportFilePath)
 		.AddProperty("reportFile", $ELSCOPE_PUBLIC, $hFile)
@@ -69,11 +51,34 @@ Func _testSuite_($sSuiteName, $sReportFormat = "txt")
 		.AddProperty("testsFailed", $ELSCOPE_PUBLIC, 0)
 		.AddProperty("testCount", $ELSCOPE_PRIVATE, 0)
 		.AddProperty("result", $ELSCOPE_PUBLIC, 1) ;0 Failed - 1 OK
+		.AddProperty("resultText", $ELSCOPE_PUBLIC, "pass")
 		.AddProperty("startTime", $ELSCOPE_PUBLIC, _NowCalc())
 	EndWith
 
 	Return $oClassObject.Object
 EndFunc   ;==>_testSuite_
+
+Func _setReportFormat($this, $reportFormat)
+    $this.format = $reportFormat
+    If($sReportFormat = "html") Then
+        $sReportFilePath = @ScriptDir & "\" & $suiteName & "." & $this.format
+        FileCopy(@ScriptDir & $sHTMLTemplate,$sReportFilePath,1)
+        ;Set title
+        $sReportContent = FileRead($sReportFilePath);
+        FileClose($sReportFilePath)
+        ;Write mode (erase previous contents)
+        $hFile = FileOpen($sReportFilePath,2)
+        $sReportContent = StringReplace($sReportContent,"<{$TestSuiteTitle>",$suiteName,0)
+        FileWrite($hFile,$sReportContent)
+        FileClose($hFile)
+    Else ;txt format
+        $this.format = "txt"
+        $sReportFilePath = @ScriptDir & "\" & $suiteName & "." & $this.format
+        $hFile = FileOpen($sReportFilePath,2)
+        FileClose($hFile)
+    EndIf
+EndFunc
+
 
 ;Function: _Stop
 ;
@@ -86,7 +91,7 @@ Func _Stop($this)
 
 	If ($this.format = "html") Then
 		$sReportContent = FileRead($this.reportFilePath)
-		$sReportContent = StringReplace($sReportContent,'<($TestSuiteResult)>',$aResult[$this.result],0)
+		$sReportContent = StringReplace($sReportContent,'<($TestSuiteResult)>',$aResult[$this.resultText],0)
 		$sReportContent = StringReplace($sReportContent,'<($Duration)>',$testDuration,0)
 		$sReportContent = StringReplace($sReportContent,'<($TestCount)>',$this.testCount,0)
 		$sReportContent = StringReplace($sReportContent,'<($TestFailed)>',$this.testsFailed,0)
@@ -125,6 +130,7 @@ Func _addTest($this, $test)
 	;If a step fails, the test suite is marked as failed
 	If $aResult[1] = 0 Then
 		$this.result = 0
+        $this.resultText = "fail"
 		$this.testsFailed = $this.testsFailed + 1
 	Else
 		$this.testsPassed = $this.testsPassed + 1
