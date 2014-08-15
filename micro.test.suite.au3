@@ -56,8 +56,10 @@ Func _finish($this)
 	$this.time = _DateDiff('s', $this.startTime, _NowCalc())
 
     If $this.pass Then
+        ConsoleWrite("0" & @CRLF)
         Exit 0
     Else
+        ConsoleWrite("1" & @CRLF)
         Exit 1
     EndIf
 EndFunc   ;==>_Stop
