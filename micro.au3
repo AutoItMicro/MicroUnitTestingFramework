@@ -8,4 +8,4 @@
 #include "micro.test.suite.au3"
 #EndRegion includes
 
-_AutoItObject_Startup()
+_AutoItObject_Startup(True)
