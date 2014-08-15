@@ -1,144 +1,92 @@
-;License:
-;	This script is distributed under the MIT License
-;
-;Author:
-;	oscar.tejera
-;
-;Description:
-; Simple test suite module
+#include "micro.au3"
 
-Global $aResult[2]
-$aResult[0] = "fail"
-$aResult[1] = "pass"
-Global $sHTMLTemplate = "/test/resources/report.html"
-
-;Initializes
-_AutoItObject_Startup()
-
-;Function: _testSuite_
-;Test suite object
-;
-;Parameters:
-;	$sTestName - String Test name
-;
-;Returns:
-;	Test object
 Func _testSuite_($suiteName)
 	Local $oClassObject = _AutoItObject_Class()
 	Local $dicTest = ObjCreate("Scripting.Dictionary")
 	Local $hFile
-	Local $sReportFilePath
-	Local $sReportContent
 	$oClassObject.Create()
 
 	;Methods
 	With $oClassObject
-		.AddMethod("stop", "_Stop")
+		.AddMethod("finish", "_finish")
 		.AddMethod("addTest", "_AddTest")
-		.AddMethod("countTest", "_CountTests")
-        .AddMethod("setReportFormat","_setReportFormat")
+		.AddMethod("testPassed","_testPassed")
+        .AddMethod("testFailed","_testFailed")
 	EndWith
 
 	;Property
 	With $oClassObject
 		.AddProperty("_type_", $ELSCOPE_PUBLIC, "_testSuite_") ;Object type
 		.AddProperty("name", $ELSCOPE_PUBLIC, $suiteName)
-		.AddProperty("format", $ELSCOPE_PUBLIC, $sReportFormat)
+		.AddProperty("format", $ELSCOPE_PUBLIC, "html")
 		.AddProperty("reportFilePath", $ELSCOPE_PUBLIC, $sReportFilePath)
 		.AddProperty("reportFile", $ELSCOPE_PUBLIC, $hFile)
 		.AddProperty("tests", $ELSCOPE_PUBLIC, $dicTest)
 		.AddProperty("testsPassed", $ELSCOPE_PUBLIC, 0)
 		.AddProperty("testsFailed", $ELSCOPE_PUBLIC, 0)
-		.AddProperty("testCount", $ELSCOPE_PRIVATE, 0)
-		.AddProperty("result", $ELSCOPE_PUBLIC, 1) ;0 Failed - 1 OK
-		.AddProperty("resultText", $ELSCOPE_PUBLIC, "pass")
+		.AddProperty("testCount", $ELSCOPE_PUBLIC, 0)
+		.AddProperty("pass", $ELSCOPE_PUBLIC, True) ;0 Failed - 1 OK
+		.AddProperty("result", $ELSCOPE_PUBLIC, "pass")
 		.AddProperty("startTime", $ELSCOPE_PUBLIC, _NowCalc())
+		.AddProperty("startTime", $ELSCOPE_PUBLIC, _NowCalc())
+		.AddProperty("HtmlTemplate", $ELSCOPE_PUBLIC, "/micro/resources/report.html")
+		.AddProperty("reportFilePath", $ELSCOPE_PUBLIC, @ScriptDir & "/report.html")
 	EndWith
 
 	Return $oClassObject.Object
 EndFunc   ;==>_testSuite_
 
-Func _setReportFormat($this, $reportFormat)
-    $this.format = $reportFormat
-    If($sReportFormat = "html") Then
-        $sReportFilePath = @ScriptDir & "\" & $suiteName & "." & $this.format
-        FileCopy(@ScriptDir & $sHTMLTemplate,$sReportFilePath,1)
-        ;Set title
-        $sReportContent = FileRead($sReportFilePath);
-        FileClose($sReportFilePath)
-        ;Write mode (erase previous contents)
-        $hFile = FileOpen($sReportFilePath,2)
-        $sReportContent = StringReplace($sReportContent,"<{$TestSuiteTitle>",$suiteName,0)
-        FileWrite($hFile,$sReportContent)
-        FileClose($hFile)
-    Else ;txt format
-        $this.format = "txt"
-        $sReportFilePath = @ScriptDir & "\" & $suiteName & "." & $this.format
-        $hFile = FileOpen($sReportFilePath,2)
-        FileClose($hFile)
-    EndIf
-EndFunc
-
-
-;Function: _Stop
-;
-;
-;
-;Returns:
-;	void
-Func _Stop($this)
-	$testDuration = _DateDiff('s', $this.startTime, _NowCalc())
-
-	If ($this.format = "html") Then
-		$sReportContent = FileRead($this.reportFilePath)
-		$sReportContent = StringReplace($sReportContent,'<($TestSuiteResult)>',$aResult[$this.resultText],0)
-		$sReportContent = StringReplace($sReportContent,'<($Duration)>',$testDuration,0)
-		$sReportContent = StringReplace($sReportContent,'<($TestCount)>',$this.testCount,0)
-		$sReportContent = StringReplace($sReportContent,'<($TestFailed)>',$this.testsFailed,0)
-		$sReportContent = StringReplace($sReportContent,'<($TestPassed)>',$this.testsPassed,0)
-		$hFile = FileOpen($this.reportFilePath,2)
-		FileWrite($hFile,$sReportContent)
-		FileClose($hFile)
-	Else
-		FileWriteLine($this.reportFilePath, @CRLF & "=======================================")
-		FileWriteLine($this.reportFilePath, "Test suite: " & $this.name & @CRLF)
-		FileWriteLine($this.reportFilePath, "Global result: " & $aResult[$this.result] & @CRLF)
-		FileWriteLine($this.reportFilePath, "Finished in: " & $iDuration & " seconds." & $this.testCount & " tests," & $this.testsFailed & " failures," & $this.testsPassed & " passed" & @CRLF)
-		FileClose($this.reportFilePath)
-	EndIf
-EndFunc   ;==>_Stop
-
-;Function: _addTest
-;Add a test case.
-;
-;Parameters:
-;	$sTestName - String Test name
-;	$iResult - Int Test Case result
-;
-;Returns:
-;	void
 Func _addTest($this, $test)
-	Local $dicTemp
-	Local $aResult[2]
-
-	$dicTemp = $this.tests
 	$this.testCount = $this.testCount + 1
 
-	$aResult[0] = $test.Name
-	$aResult[1] = $test.TestResult
-
-	;If a step fails, the test suite is marked as failed
-	If $aResult[1] = 0 Then
-		$this.result = 0
-        $this.resultText = "fail"
-		$this.testsFailed = $this.testsFailed + 1
+    If $test.pass Then
+		$this.testPassed()
 	Else
-		$this.testsPassed = $this.testsPassed + 1
+		$this.testFailed()
 	EndIf
 
-	$dicTemp.Add($this.testCount, $aResult[1])
-	$this.tests = _CloneDict($dicTemp)
+    $this.tests.Add(($this.testCount, $test.TestResult)
 EndFunc   ;==>_AddTest
+
+Func _testPassed($this)
+    $this.testsPassed = $this.testsPassed + 1
+EndFunc
+
+Func _testFailed($this)
+    $this.pass = False
+    $this.result = "fail"
+    $this.testsFailed = $this.testsFailed + 1
+EndFunc
+
+Func _finish($this)
+	$this.time = _DateDiff('s', $this.startTime, _NowCalc())
+
+    If $this.pass Then
+        Exit(0)
+    Else
+        Exit(1)
+    EndIf
+;~ 	If ($this.format = "html") Then
+;~ 		$sReportContent = FileRead($this.reportFilePath)
+;~ 		$sReportContent = StringReplace($sReportContent,'<($TestSuiteResult)>',$aResult[$this.resultText],0)
+;~ 		$sReportContent = StringReplace($sReportContent,'<($Duration)>',$testDuration,0)
+;~ 		$sReportContent = StringReplace($sReportContent,'<($TestCount)>',$this.testCount,0)
+;~ 		$sReportContent = StringReplace($sReportContent,'<($TestFailed)>',$this.testsFailed,0)
+;~ 		$sReportContent = StringReplace($sReportContent,'<($TestPassed)>',$this.testsPassed,0)
+;~ 		$hFile = FileOpen($this.reportFilePath,2)
+;~ 		FileWrite($hFile,$sReportContent)
+;~ 		FileClose($hFile)
+;~ 	Else
+;~ 		FileWriteLine($this.reportFilePath, @CRLF & "=======================================")
+;~ 		FileWriteLine($this.reportFilePath, "Test suite: " & $this.name & @CRLF)
+;~ 		FileWriteLine($this.reportFilePath, "Global result: " & $aResult[$this.result] & @CRLF)
+;~ 		FileWriteLine($this.reportFilePath, "Finished in: " & $iDuration & " seconds." & $this.testCount & " tests," & $this.testsFailed & " failures," & $this.testsPassed & " passed" & @CRLF)
+;~ 		FileClose($this.reportFilePath)
+;~ 	EndIf
+EndFunc   ;==>_Stop
+
+
+
 
 
 Func _testReportHtml($this, $test)
