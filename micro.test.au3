@@ -33,16 +33,15 @@ Func _assertTrue($this, $assertText, $assertion)
 EndFunc
 
 Func _addStep($this,$stepText,$assertion)
-	$this.StepCount = $this.StepCount + 1
+	Local $step[2] = [$stepText,$assertion]
+    $this.StepCount = $this.StepCount + 1
+    $this.Steps.Add($this.StepCount, $step)
 
     If $assertion Then
         $this.stepPassed()
     Else
         $this.testFailed()
 	EndIf
-
-    $step[2] = [$stepText,$assertion]
-	$this.Steps.Add($this.StepCount, $step)
 EndFunc
 
 Func _stepFailed($this)
