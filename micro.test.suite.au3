@@ -56,9 +56,9 @@ Func _finish($this)
 	$this.time = _DateDiff('s', $this.startTime, _NowCalc())
 
     If $this.pass Then
-        Exit(0)
+        Exit 0
     Else
-        Exit(1)
+        Exit 1
     EndIf
 EndFunc   ;==>_Stop
 
