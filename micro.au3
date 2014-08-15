@@ -19,7 +19,7 @@
 
 #region Global
 Global $dicFailedTest = ObjCreate("scripting.dictionary")
-
+Global $reportType
 Global $aResult[2]
 $aResult[0] = "fail"
 $aResult[1] = "pass"

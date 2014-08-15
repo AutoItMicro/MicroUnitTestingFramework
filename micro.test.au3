@@ -58,6 +58,7 @@ Func _test_($sTestName)
 		.AddProperty("Steps", $ELSCOPE_PUBLIC, $dicSteps) ;Dictionary with test case steps
 		.AddProperty("StepCount",$ELSCOPE_PRIVATE,0)
 		.AddProperty("TestResult",$ELSCOPE_PRIVATE,1) ;0 Failed - 1 OK
+        .AddProperty("TestResultText",$ELSCOPE_PRIVATE,"pass") ;0 Failed - 1 OK
 		.AddProperty("TestStepFailed",$ELSCOPE_PRIVATE,0)
 		.AddProperty("TestStepPassed",$ELSCOPE_PRIVATE,0)
 		.AddProperty("TestStart",$ELSCOPE_PUBLIC,_NowCalc())
@@ -77,22 +78,22 @@ EndFunc
 ;
 ;Returns:
 ;	void
-Func _addToSuite($oSelf,$objTestSuite)
+Func _addToSuite($this,$objTestSuite)
 	Local $sResult
 	Local $iDuration
 	Local $sReportFilePath
 
-	$sResult = $aResult[$oSelf.TestResult] ;Get the test result
-	$oSelf.TestEnd = _NowCalc()
-	$oSelf.Duration = _DateDiff('s', $oSelf.TestStart, $oSelf.TestEnd) ;Calculated the test duration
+	$sResult = $aResult[$this.TestResult] ;Get the test result
+	$this.TestEnd = _NowCalc()
+	$this.Duration = _DateDiff('s', $this.TestStart, $this.TestEnd) ;Calculated the test duration
 
 	;Add test case into the test suite
 	If IsObj($objTestSuite) Then
-		$oSelf.TestSuite = $objTestSuite
-		$oSelf.TestSuite.addTest($oSelf.name,$oSelf.TestResult)
+		$this.TestSuite = $objTestSuite
+		$this.TestSuite.addTest($this.name,$this.TestResult)
 	EndIf
 
-	_saveResult($oSelf)
+	_saveResult($this)
 EndFunc
 
 ;Function: _saveResult
@@ -104,25 +105,25 @@ EndFunc
 ;
 ;Returns:
 ;	void
-Func _saveResult($oSelf)
+Func _saveResult($this)
 	Local $sReportContent = ""
 	Local $sTestDetail
 	Local $hFile
 	Local $sTestMark = '<div id="testcase" style="visibility:hidden"></div>'
 
-	$sReportContent = FileRead($oSelf.TestSuite.reportFilePath)
+	$sReportContent = FileRead($this.TestSuite.reportFilePath)
 
 	;Add test result into Test suite report by format
-	If($oSelf.TestSuite.format = "html") Then
-		$sTestDetail = _reportHTML($oSelf) & $sTestMark
+	If($this.TestSuite.format = "html") Then
+		$sTestDetail = _reportHTML($this) & $sTestMark
 		$sReportContent = StringReplace($sReportContent,$sTestMark,$sTestDetail,0)
-		$hFile = FileOpen($oSelf.TestSuite.reportFilePath,2)
+		$hFile = FileOpen($this.TestSuite.reportFilePath,2)
 		FileWrite($hFile,$sReportContent)
 		FileClose($hFile)
 
 	Else ;txt format
-		$hFile = FileOpen($oSelf.TestSuite.reportFilePath,2)
-		$sReportContent = $sReportContent & _reportTxt($oSelf)
+		$hFile = FileOpen($this.TestSuite.reportFilePath,2)
+		$sReportContent = $sReportContent & _reportTxt($this)
 		FileWrite($hFile,$sReportContent)
 		FileClose($hFile)
 	EndIf
@@ -137,27 +138,20 @@ EndFunc
 ;
 ;Returns:
 ;	void
-Func _addStepResult($oSelf,$sStepName,$iResult)
-	Local $dicTemp
-	Local $sScreenPicture
-	Local $aResult[2]
+Func _addStepResult($this,$sStepName,$iResult)
+	$dicTemp = $this.Steps
+	$this.StepCount = $this.StepCount + 1
 
-	$dicTemp = $oSelf.Steps
-	$oSelf.StepCount = $oSelf.StepCount + 1
-
-	$aResult[0] = $sStepName
-	$aResult[1] = $iResult
-
-	;If a step fails, the test is marked as failed
-	If $iResult = 0 Then
-		$oSelf.TestResult = 0
-		$oSelf.TestStepFailed = $oSelf.TestStepFailed + 1
+    If $iResult = 0 Then
+		$this.TestResult = 0
+        $this.TestResultText = "fail"
+		$this.TestStepFailed = $this.TestStepFailed + 1
 	Else
-		$oSelf.TestStepPassed = $oSelf.TestStepPassed + 1
+		$this.TestStepPassed = $this.TestStepPassed + 1
 	EndIf
 
-	$dicTemp.Add($oSelf.StepCount,$aResult)
-	$oSelf.Steps = _CloneDict($dicTemp)
+	$dicTemp.Add($this.StepCount,[$sStepName,$iResult])
+	$this.Steps = _CloneDict($dicTemp)
 EndFunc
 
 ;Function: _removeSteps
@@ -165,11 +159,11 @@ EndFunc
 ;
 ;Returns:
 ;	void
-Func _removeSteps($oSelf)
+Func _removeSteps($this)
 	Local $dicTemp
-	$dicTemp = $oSelf.Steps
+	$dicTemp = $this.Steps
 	$dicTemp.RemoveAll
-	$oSelf.StepCount = 0
+	$this.StepCount = 0
 EndFunc
 
 ;Function: _getLastStep
@@ -177,13 +171,13 @@ EndFunc
 ;
 ;Returns:
 ; int
-Func _GetLastStep($oSelf)
+Func _GetLastStep($this)
 	Local $iTotal
 	Local $dicTemp
 
-	$dicTemp = $oSelf.Steps
-	if $dicTemp.Exists($oSelf.StepCount) Then
-		Return $dicTemp.item($oSelf.StepCount)
+	$dicTemp = $this.Steps
+	if $dicTemp.Exists($this.StepCount) Then
+		Return $dicTemp.item($this.StepCount)
 	Else
 		Return 0
     EndIf
@@ -194,8 +188,8 @@ EndFunc
 ;
 ;Returns:
 ; int
-Func _CountSteps($oSelf)
-	Return $oSelf.StepCount
+Func _CountSteps($this)
+	Return $this.StepCount
 EndFunc
 
 ;Function: _CloneDict
@@ -227,49 +221,7 @@ EndFunc
 ;
 ;Return:
 ;	String - Report with test case details
-Func _reportHTML($objTest)
-	 Local $sTestResult  = $aResult[$objTest.TestResult]
-	 Local $htmlTestHeader = '<h2 class="'& $sTestResult &'">' & $objTest.Name & '<span class="result"><span class="green">'& $objTest.TestStepPassed &'</span>/<span class="red">' & $objTest.TestStepFailed &'</span></span></h2>' & @CRLF
-	 Local $htmlStepHeader = '<ul class="tests">' & @CRLF
-	 Local $htmlSteps = ""
-	 Local $htmlReport  = ""
 
-	;Get all steps in the test case
-	For $iStep = 1 To $objTest.StepCount
-		Local $dicTemp = $objTest.Steps
-		local $aStep = $dicTemp.item($iStep)
-		$htmlSteps = $htmlSteps & '<li><span class="type ' & $aResult[$aStep[1]] & '">'& $aStep[0]  &'</span><span class="file">Step '& $iStep &'</span></li>' & @CRLF
-	Next
-
-	$htmlReport = $htmlTestHeader & $htmlStepHeader & $htmlSteps & "</ul>" & @CRLF
-	return $htmlReport
-EndFunc
-
-;Function:
-;
-;
-;Parameters:
-;	$objTest - _test_ object
-;
-;Return:
-;	String - Report with test case details
-Func _reportTxt($objTest)
-	 Local $sTestResult  = $aResult[$objTest.TestResult]
-	 Local $txtTestHeader = "------------------------------------" & @CRLF
-	 $txtTestHeader = $txtTestHeader & 'Test Name: ' & $objTest.Name & @CRLF & 'Test Result: '& $sTestResult & @CRLF
-	 Local $txtSteps = ""
-	 Local $txtReport  = ""
-
-	;Get all steps in the test case
-	For $iStep = 1 To $objTest.StepCount
-		Local $dicTemp = $objTest.Steps
-		local $aStep = $dicTemp.item($iStep)
-		$txtSteps = $txtSteps & '==> Step: Result: ' & $aStep[0] & ' Result: ' & $aResult[$aStep[1]] & @CRLF
-	Next
-
-	$txtReport = $txtTestHeader & @CRLF & $txtSteps & @CRLF
-	return $txtReport
-EndFunc
 
 ; === Assertions ===
 
@@ -282,7 +234,7 @@ EndFunc
 ;
 ;Returns:
 ;	int, 1 if the expression evaluates to true, otherwise returns 0
-Func _assertEquals($oSelf,$expected, $actual)
+Func _assertEquals($this,$expected, $actual)
 	Local $sResult
 
 	If ($expected = $actual) Then
@@ -302,7 +254,7 @@ EndFunc   ;==>_assertEquals
 ;
 ;Returns:
 ;	int, 1 if the expression evaluates to true, otherwise returns 0
-Func _assertNotEquals($oSelf,$expected, $actual)
+Func _assertNotEquals($this,$expected, $actual)
 	Local $sResult
 
 	If ($expected <> $actual) Then
@@ -321,7 +273,7 @@ EndFunc   ;==>_assertNotEquals
 ;
 ;Returns:
 ;	int, 1 if the expression evaluates to true, otherwise returns 0
-Func _assertFalse($oSelf,$condition)
+Func _assertFalse($this,$condition)
 
 	If ($condition = False) Then
 		Return 1
@@ -338,7 +290,7 @@ EndFunc   ;==>_assertFalse
 ;
 ;Returns:
 ;	int, 1 if the expression evaluates to true, otherwise returns 0
-Func _assertTrue($oSelf,$condition)
+Func _assertTrue($this,$condition)
 	Local $sResult
 
 	If ($condition = True) Then
@@ -356,7 +308,7 @@ EndFunc   ;==>_assertTrue
 ;
 ;Returns:
 ;	int, 1 if the expression evaluates to true, otherwise returns 0
-Func _assertType($oSelf,$expected, $actual)
+Func _assertType($this,$expected, $actual)
 	Select
 		Case $expected = "string"
 			If (IsString($actual) = True) Then
@@ -403,7 +355,7 @@ EndFunc   ;==>_assertType
 ;
 ;Returns:
 ;	int, 1 if the expression evaluates to true, otherwise returns 0
-Func _assertLessThan($oSelf,$expected, $actual)
+Func _assertLessThan($this,$expected, $actual)
 
 	If ($expected < $actual) Then
 		Return 1
@@ -421,7 +373,7 @@ EndFunc   ;==>_assertLessThan
 ;
 ;Returns:
 ;	int, 1 if the expression evaluates to true, otherwise returns 0
-Func _assertLessThanOrEqual($oSelf,$expected, $actual)
+Func _assertLessThanOrEqual($this,$expected, $actual)
 
 	If ($expected <= $actual) Then
 		Return 1
@@ -439,7 +391,7 @@ EndFunc   ;==>_assertLessThanOrEqual
 ;
 ;Returns:
 ;	int, 1 if the expression evaluates to true, otherwise returns 0
-Func _assertGreaterThanOrEqual($oSelf,$expected, $actual)
+Func _assertGreaterThanOrEqual($this,$expected, $actual)
 
 	If ($expected >= $actual) Then
 		Return 1
@@ -457,7 +409,7 @@ EndFunc   ;==>_assertGreaterThanOrEqual
 ;
 ;Returns:
 ;	int, 1 if the expression evaluates to true, otherwise returns 0
-Func _assertGreaterThan($oSelf,$expected, $actual)
+Func _assertGreaterThan($this,$expected, $actual)
 
 	If ($expected > $actual) Then
 		Return 1
@@ -474,7 +426,7 @@ EndFunc   ;==>_assertGreaterThan
 ;
 ;Returns:
 ;	int, 1 if the expression evaluates to true, otherwise returns 0
-Func _assertFileExists($oSelf,$filename)
+Func _assertFileExists($this,$filename)
 
 	If (FileExists($filename) = 1) Then
 		Return 1
@@ -491,7 +443,7 @@ EndFunc   ;==>_assertFileExists
 ;
 ;Returns:
 ;	int, 1 if the expression evaluates to true, otherwise returns 0
-Func _assertFileNotExists($oSelf,$filename)
+Func _assertFileNotExists($this,$filename)
 
 	If (FileExists($filename) = 1) Then
 		Return 0
@@ -509,7 +461,7 @@ EndFunc   ;==>_assertFileExists
 ;
 ;Returns:
 ;	int, 1 if the expression evaluates to true, return 2 if function FileReadToarray falied, otherwise returns 0
-Func _assertFileEquals($oSelf,$expected, $actual)
+Func _assertFileEquals($this,$expected, $actual)
 	Local $aRecordsOne
 	Local $aRecordsTwo
 	Local $sContentOne
