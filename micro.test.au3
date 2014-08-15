@@ -1,5 +1,3 @@
-#include "micro.au3"
-
 Func _test_($sTestName)
 	$oClassObject = _AutoItObject_Class()
 	$oClassObject.Create()

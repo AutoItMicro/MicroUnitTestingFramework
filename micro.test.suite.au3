@@ -1,5 +1,3 @@
-#include "micro.au3"
-
 Func _testSuite_($suiteName)
 	Local $oClassObject = _AutoItObject_Class()
 	Local $dicTest = ObjCreate("Scripting.Dictionary")
