@@ -41,7 +41,8 @@ Func _addStep($this,$stepText,$assertion)
         $this.testFailed()
 	EndIf
 
-	$this.Steps.Add($this.StepCount,[$stepText,$assertion])
+    $step[2] = [$stepText,$assertion]
+	$this.Steps.Add($this.StepCount, $step)
 EndFunc
 
 Func _stepFailed($this)
