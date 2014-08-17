@@ -1,0 +1,11 @@
+install:
+  - cinst autoit
+
+version: 1.9.alpha.{build}
+
+build: off
+
+test: off
+
+
+
