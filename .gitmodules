@@ -1,0 +1,3 @@
+[submodule "AutoItObject"]
+	path = AutoItObject
+	url = git@github.com:AutoItMicro/AutoItObject.git
