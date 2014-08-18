@@ -6,7 +6,7 @@
 Local $testSuite = _testSuite_("Test Suite Test")
 
 $testSuite.addTest(assertTruePass())
-$testSuite.addTest(assertTrueFail())
+$testSuite.addTest(assertFalsePass())
 
 $testSuite.finish()
 #EndRegion
