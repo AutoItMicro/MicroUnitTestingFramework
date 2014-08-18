@@ -1,5 +1,5 @@
 install:
-  - cinst autoit
+  - cinst autoit.commandline
 
 version: 1.9.alpha.{build}
 
