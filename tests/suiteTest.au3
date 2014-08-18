@@ -1,5 +1,3 @@
-#AutoIt3Wrapper_UseX64=n
-
 #Region include for test
 #include <../micro.au3>
 #EndRegion
@@ -18,4 +16,10 @@ Func assertTruePass()
 	$test.assertTrue("True", True)
     Return $test
 EndFunc
+Func assertTrueFail()
+    $test = _test_("assertTrue(true) returns pass")
+	$test.assertTrue("False", False)
+    Return $test
+EndFunc
+
 #EndRegion
