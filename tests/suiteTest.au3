@@ -18,9 +18,9 @@ Func assertTruePass()
     Return $test
 EndFunc
 
-Func assertTrueFail()
-    $test = _test_("assertTrue(False) returns Failed")
-	$test.assertTrue("False", False)
+Func assertFalsePass()
+    $test = _test_("assertFalse(False) returns True")
+	$test.assertFalse("False", False)
     Return $test
 EndFunc
 #EndRegion

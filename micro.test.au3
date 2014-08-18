@@ -33,6 +33,10 @@ Func assertTrue($this, $assertText, $assertion)
     $this.endTime = _NowCalc()
 EndFunc
 
+Func assertFalse($this, $assertText, $falseAssertion)
+    $this.assertTrue($assertText,Not $falseAssertion)
+EndFunc
+
 Func addStep($this,$stepText,$assertion)
 	Local $step[2] = [$stepText,$assertion]
     $this.stepCount = $this.stepCount + 1

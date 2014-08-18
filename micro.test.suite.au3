@@ -24,6 +24,7 @@ Func _testSuite_($suiteName)
 		.AddProperty("result", $ELSCOPE_PUBLIC, "Passed")
 		.AddProperty("beginTime", $ELSCOPE_PUBLIC, _NowCalc())
 		.AddProperty("endTime", $ELSCOPE_PUBLIC, _NowCalc())
+		.AddProperty("failFast", $ELSCOPE_PUBLIC, False)
 	EndWith
 
 	Return $oClassObject.Object
@@ -50,16 +51,18 @@ Func testFailed($this)
     $this.pass = False
     $this.result = "Failed"
     $this.testsFailed = $this.testsFailed + 1
+    If $this.failFast Then
+        Exit 1
+    EndIf
 EndFunc
 
 Func finish($this)
 	$this.endTime = _NowCalc()
 
+
     If $this.pass Then
-        ConsoleWrite("0" & @CRLF)
         Exit 0
     Else
-        ConsoleWrite("1" & @CRLF)
         Exit 1
     EndIf
 EndFunc   ;==>_Stop
