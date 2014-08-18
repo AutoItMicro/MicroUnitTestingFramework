@@ -13,13 +13,13 @@ $testSuite.finish()
 
 #Region Test Functions
 Func assertTruePass()
-    $test = _test_("assertTrue(true) returns pass")
+    $test = _test_("assertTrue(true) returns Passed")
 	$test.assertTrue("True", True)
     Return $test
 EndFunc
 
 Func assertTrueFail()
-    $test = _test_("assertTrue(true) returns pass")
+    $test = _test_("assertTrue(False) returns Failed")
 	$test.assertTrue("False", False)
     Return $test
 EndFunc

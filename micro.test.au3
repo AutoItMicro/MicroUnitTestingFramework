@@ -41,7 +41,7 @@ Func addStep($this,$stepText,$assertion)
     If $assertion Then
         $this.stepPassed()
     Else
-        $this.testFailed()
+        $this.stepFailed()
 	EndIf
 EndFunc
 
