@@ -1,4 +1,4 @@
-Func _test_($sTestName)
+Func _test_($testName)
 	$oClassObject = _AutoItObject_Class()
 	$oClassObject.Create()
     $dicSteps = ObjCreate("Scripting.Dictionary")
@@ -12,16 +12,15 @@ Func _test_($sTestName)
         .AddMethod("duration","duration")
 	EndWith
 
-	;Property
 	With $oClassObject
 		.AddProperty("_type_", $ELSCOPE_PUBLIC, "_test_") ;Object type
-		.AddProperty("Name", $ELSCOPE_PUBLIC,$sTestName)
-		.AddProperty("Steps", $ELSCOPE_PUBLIC, $dicSteps) ;Dictionary with test case steps
-		.AddProperty("StepCount",$ELSCOPE_PRIVATE,0)
+		.AddProperty("name", $ELSCOPE_PUBLIC,$testName)
+		.AddProperty("steps", $ELSCOPE_PUBLIC, $dicSteps) ;Dictionary with test case steps
+		.AddProperty("stepCount",$ELSCOPE_PRIVATE,0)
 		.AddProperty("pass",$ELSCOPE_PUBLIC,True)
-        .AddProperty("TestResult",$ELSCOPE_PUBLIC,"pass") ;0 Failed - 1 OK
-		.AddProperty("TestStepsFailed",$ELSCOPE_PUBLIC,0)
-		.AddProperty("TestStepsPassed",$ELSCOPE_PUBLIC,0)
+        .AddProperty("testResult",$ELSCOPE_PUBLIC,"Passed") ;0 Failed - 1 OK
+		.AddProperty("testStepsFailed",$ELSCOPE_PUBLIC,0)
+		.AddProperty("testStepsPassed",$ELSCOPE_PUBLIC,0)
         .AddProperty("beginTime",$ELSCOPE_PRIVATE,_NowCalc())
         .AddProperty("endTime",$ELSCOPE_PRIVATE,_NowCalc())
 	EndWith
@@ -36,8 +35,8 @@ EndFunc
 
 Func addStep($this,$stepText,$assertion)
 	Local $step[2] = [$stepText,$assertion]
-    $this.StepCount = $this.StepCount + 1
-    $this.Steps.Add($this.StepCount, $step)
+    $this.stepCount = $this.stepCount + 1
+    $this.steps.Add($this.stepCount, $step)
 
     If $assertion Then
         $this.stepPassed()
@@ -48,15 +47,14 @@ EndFunc
 
 Func stepFailed($this)
     $this.pass = False
-    $this.TestResult = "fail"
-	$this.TestStepFailed = $this.TestStepFailed + 1
+    $this.testResult = "Failed"
+	$this.testStepFailed = $this.testStepFailed + 1
 EndFunc
 
 Func stepPassed($this)
-    $this.TestStepPassed = $this.TestStepPassed + 1
+    $this.testStepPassed = $this.testStepPassed + 1
 EndFunc
 
 Func duration($this)
     Return $this.endTime - $this.beginTime
 EndFunc
-

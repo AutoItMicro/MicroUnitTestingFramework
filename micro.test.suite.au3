@@ -16,12 +16,13 @@ Func _testSuite_($suiteName)
 	With $oClassObject
 		.AddProperty("_type_", $ELSCOPE_PUBLIC, "_testSuite_") ;Object type
 		.AddProperty("name", $ELSCOPE_PUBLIC, $suiteName)
+		.AddProperty("ci", $ELSCOPE_PUBLIC, False)
 		.AddProperty("format", $ELSCOPE_PUBLIC, "html")
 		.AddProperty("tests", $ELSCOPE_PUBLIC, $dicTest)
 		.AddProperty("testsPassed", $ELSCOPE_PUBLIC, 0)
 		.AddProperty("testsFailed", $ELSCOPE_PUBLIC, 0)
 		.AddProperty("pass", $ELSCOPE_PUBLIC, True) ;0 Failed - 1 OK
-		.AddProperty("result", $ELSCOPE_PUBLIC, "pass")
+		.AddProperty("result", $ELSCOPE_PUBLIC, "Passed")
 		.AddProperty("beginTime", $ELSCOPE_PUBLIC, _NowCalc())
 		.AddProperty("endTime", $ELSCOPE_PUBLIC, _NowCalc())
 	EndWith
@@ -38,6 +39,7 @@ Func addTest($this, $test)
 		$this.testFailed()
 	EndIf
 
+    appveyorAddTest($test.name, $test.testResult, $test.duration)
     $this.tests.Add($this.testCount, $test.TestResult)
 EndFunc   ;==>_AddTest
 
