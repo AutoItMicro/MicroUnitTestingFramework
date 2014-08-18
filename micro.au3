@@ -6,7 +6,8 @@
 #include <AutoitObject/AutoitObject.au3>
 #include <micro.test.au3>
 #include <micro.test.suite.au3>
+#include <AutoItAppveyor/AutoItAppveyor.au3>
 #EndRegion includes
 
-_AutoItObject_Startup(True)
+_AutoItObject_Startup()
 

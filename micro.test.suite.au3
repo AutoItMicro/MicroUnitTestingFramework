@@ -1,34 +1,36 @@
 Func _testSuite_($suiteName)
 	Local $oClassObject = _AutoItObject_Class()
-	Local $dicTest = ObjCreate("Scripting.Dictionary")
 	$oClassObject.Create()
 
-	;Methods
+    Local $dicTest = ObjCreate("Scripting.Dictionary")
+
 	With $oClassObject
-		.AddMethod("finish", "_finish")
-		.AddMethod("addTest", "_AddTest")
-		.AddMethod("testPassed","_testPassed")
-        .AddMethod("testFailed","_testFailed")
+		.AddMethod("finish", "finish")
+		.AddMethod("addTest", "AddTest")
+		.AddMethod("testPassed","testPassed")
+        .AddMethod("testFailed","testFailed")
+        .AddMethod("duration","suiteDuration")
 	EndWith
 
-	;Property
 	With $oClassObject
 		.AddProperty("_type_", $ELSCOPE_PUBLIC, "_testSuite_") ;Object type
 		.AddProperty("name", $ELSCOPE_PUBLIC, $suiteName)
+		.AddProperty("ci", $ELSCOPE_PUBLIC, False)
 		.AddProperty("format", $ELSCOPE_PUBLIC, "html")
 		.AddProperty("tests", $ELSCOPE_PUBLIC, $dicTest)
 		.AddProperty("testsPassed", $ELSCOPE_PUBLIC, 0)
 		.AddProperty("testsFailed", $ELSCOPE_PUBLIC, 0)
 		.AddProperty("pass", $ELSCOPE_PUBLIC, True) ;0 Failed - 1 OK
-		.AddProperty("result", $ELSCOPE_PUBLIC, "pass")
-		.AddProperty("startTime", $ELSCOPE_PUBLIC, _NowCalc())
-		.AddProperty("time", $ELSCOPE_PUBLIC, "")
+		.AddProperty("result", $ELSCOPE_PUBLIC, "Passed")
+		.AddProperty("beginTime", $ELSCOPE_PUBLIC, _NowCalc())
+		.AddProperty("endTime", $ELSCOPE_PUBLIC, _NowCalc())
+		.AddProperty("failFast", $ELSCOPE_PUBLIC, False)
 	EndWith
 
 	Return $oClassObject.Object
 EndFunc   ;==>_testSuite_
 
-Func _addTest($this, $test)
+Func addTest($this, $test)
 	$this.testCount = $this.testCount + 1
 
     If $test.pass Then
@@ -37,28 +39,37 @@ Func _addTest($this, $test)
 		$this.testFailed()
 	EndIf
 
+    appveyorAddTest($test.name, $test.testResult, $test.duration)
     $this.tests.Add($this.testCount, $test.TestResult)
 EndFunc   ;==>_AddTest
 
-Func _testPassed($this)
+Func testPassed($this)
     $this.testsPassed = $this.testsPassed + 1
 EndFunc
 
-Func _testFailed($this)
+Func testFailed($this)
     $this.pass = False
-    $this.result = "fail"
+    $this.result = "Failed"
     $this.testsFailed = $this.testsFailed + 1
+    If $this.failFast Then
+        Exit 1
+    EndIf
 EndFunc
 
-Func _finish($this)
-	$this.time = _DateDiff('s', $this.startTime, _NowCalc())
+Func finish($this)
+	$this.endTime = _NowCalc()
+
 
     If $this.pass Then
-        ConsoleWrite("0" & @CRLF)
         Exit 0
     Else
-        ConsoleWrite("1" & @CRLF)
         Exit 1
     EndIf
 EndFunc   ;==>_Stop
+
+Func suiteDuration($this)
+    Return $this.endTime - $this.beginTime
+EndFunc
+
+
 

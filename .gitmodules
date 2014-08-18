@@ -2,3 +2,6 @@
 	path = AutoItObject
 	url = git://github.com/AutoItMicro/AutoItObject.git
 	branch = master
+[submodule "AutoItAppveyor"]
+	path = AutoItAppveyor
+	url = git://github.com/AutoItMicro/AutoItAppveyor.git
