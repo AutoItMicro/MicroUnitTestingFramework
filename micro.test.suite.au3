@@ -5,10 +5,11 @@ Func _testSuite_($suiteName)
 
 	;Methods
 	With $oClassObject
-		.AddMethod("finish", "_finish")
-		.AddMethod("addTest", "_AddTest")
-		.AddMethod("testPassed","_testPassed")
-        .AddMethod("testFailed","_testFailed")
+		.AddMethod("finish", "finish")
+		.AddMethod("addTest", "AddTest")
+		.AddMethod("testPassed","testPassed")
+        .AddMethod("testFailed","testFailed")
+        .AddMethod("duration","suiteDuration")
 	EndWith
 
 	;Property
@@ -21,14 +22,14 @@ Func _testSuite_($suiteName)
 		.AddProperty("testsFailed", $ELSCOPE_PUBLIC, 0)
 		.AddProperty("pass", $ELSCOPE_PUBLIC, True) ;0 Failed - 1 OK
 		.AddProperty("result", $ELSCOPE_PUBLIC, "pass")
-		.AddProperty("startTime", $ELSCOPE_PUBLIC, _NowCalc())
-		.AddProperty("time", $ELSCOPE_PUBLIC, "")
+		.AddProperty("beginTime", $ELSCOPE_PUBLIC, _NowCalc())
+		.AddProperty("endTime", $ELSCOPE_PUBLIC, _NowCalc())
 	EndWith
 
 	Return $oClassObject.Object
 EndFunc   ;==>_testSuite_
 
-Func _addTest($this, $test)
+Func addTest($this, $test)
 	$this.testCount = $this.testCount + 1
 
     If $test.pass Then
@@ -40,18 +41,18 @@ Func _addTest($this, $test)
     $this.tests.Add($this.testCount, $test.TestResult)
 EndFunc   ;==>_AddTest
 
-Func _testPassed($this)
+Func testPassed($this)
     $this.testsPassed = $this.testsPassed + 1
 EndFunc
 
-Func _testFailed($this)
+Func testFailed($this)
     $this.pass = False
-    $this.result = "fail"
+    $this.result = "Failed"
     $this.testsFailed = $this.testsFailed + 1
 EndFunc
 
-Func _finish($this)
-	$this.time = _DateDiff('s', $this.startTime, _NowCalc())
+Func finish($this)
+	$this.endTime = _NowCalc()
 
     If $this.pass Then
         ConsoleWrite("0" & @CRLF)
@@ -61,4 +62,8 @@ Func _finish($this)
         Exit 1
     EndIf
 EndFunc   ;==>_Stop
+
+Func suiteDuration($this)
+    Return $this.endTime - $this.beginTime
+EndFunc
 
