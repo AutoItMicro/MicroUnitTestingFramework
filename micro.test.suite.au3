@@ -1,9 +1,9 @@
 Func _testSuite_($suiteName)
 	Local $oClassObject = _AutoItObject_Class()
-	Local $dicTest = ObjCreate("Scripting.Dictionary")
 	$oClassObject.Create()
 
-	;Methods
+    Local $dicTest = ObjCreate("Scripting.Dictionary")
+
 	With $oClassObject
 		.AddMethod("finish", "finish")
 		.AddMethod("addTest", "AddTest")
@@ -12,7 +12,6 @@ Func _testSuite_($suiteName)
         .AddMethod("duration","suiteDuration")
 	EndWith
 
-	;Property
 	With $oClassObject
 		.AddProperty("_type_", $ELSCOPE_PUBLIC, "_testSuite_") ;Object type
 		.AddProperty("name", $ELSCOPE_PUBLIC, $suiteName)

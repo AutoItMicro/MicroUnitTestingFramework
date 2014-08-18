@@ -1,3 +1,5 @@
+#AutoIt3Wrapper_UseX64=n
+
 #Region include for test
 #include <../micro.au3>
 #EndRegion

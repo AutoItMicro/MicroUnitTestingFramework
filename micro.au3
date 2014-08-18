@@ -9,5 +9,5 @@
 #include <AutoItAppveyor/AutoItAppveyor.au3>
 #EndRegion includes
 
-_AutoItObject_Startup(True)
+_AutoItObject_Startup()
 
