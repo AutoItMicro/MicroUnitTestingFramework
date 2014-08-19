@@ -2,7 +2,7 @@ version: 1.9.alpha.{build}
 
 
 init:
-  - PS: Start-Job -NoNewWindow cinst autoit.commandline
+  - PS: Start-Job cinst autoit.commandline
 
 build: off
 
