@@ -37,11 +37,15 @@ Func assertTrue($this, $assertText, $assertion)
 EndFunc
 
 Func assertFalse($this, $assertText, $falseAssertion)
-    Return $this.assertTrue($assertText,Not $falseAssertion)
+    Return $this.assertTrue($assertText, Not $falseAssertion)
 EndFunc
 
 Func assertEquals($this, $assertText, $first, $second)
-    Return $this.assertTrue($assertText,$first = $second)
+    Return $this.assertTrue($assertText, $first = $second)
+EndFunc
+
+Func assertNotEquals($this, $assertText, $first, $second)
+    Return $this.assertFalse($assertText, $first = $second)
 EndFunc
 
 Func addStep($this,$stepText,$assertion)
