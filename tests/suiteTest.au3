@@ -5,6 +5,10 @@
 #Region Test suite definition
 Local $testSuite = _testSuite_("Test Suite Test")
 
+If $CmdLine[0] > 0 Then
+    $testSuite.ci = True
+EndIf
+
 $testSuite.addTest(assertTruePass())
 $testSuite.addTest(assertFalsePass())
 $testSuite.addTest(assertEqualsPass())
@@ -15,13 +19,13 @@ $testSuite.finish()
 
 #Region Test Functions
 Func assertTruePass()
-    $test = _test_("assertTrue(true) Passes")
+    $test = _test_("assertTrue Passes")
 	$test.assertTrue("True", True)
     Return $test
 EndFunc
 
 Func assertFalsePass()
-    $test = _test_("assertFalse(False) Passes")
+    $test = _test_("assertFalse Passes")
 	$test.assertFalse("False", False)
     Return $test
 EndFunc

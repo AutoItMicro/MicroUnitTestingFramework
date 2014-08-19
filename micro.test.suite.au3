@@ -18,6 +18,7 @@ Func _testSuite_($suiteName)
 		.AddProperty("ci", $ELSCOPE_PUBLIC, False)
 		.AddProperty("format", $ELSCOPE_PUBLIC, "html")
 		.AddProperty("tests", $ELSCOPE_PUBLIC, $dicTest)
+		.AddProperty("testCount", $ELSCOPE_PUBLIC, 0)
 		.AddProperty("testsPassed", $ELSCOPE_PUBLIC, 0)
 		.AddProperty("testsFailed", $ELSCOPE_PUBLIC, 0)
 		.AddProperty("pass", $ELSCOPE_PUBLIC, True) ;0 Failed - 1 OK
@@ -39,7 +40,20 @@ Func addTest($this, $test)
 		$this.testFailed()
 	EndIf
 
-    appveyorAddTest($test.name, $test.testResult, $test.duration)
+    If $this.ci Then
+        appveyorAddTest($test.name, $test.testResult, $test.duration)
+    Else
+        ConsoleWrite($this.testCount & @TAB & $test.name & @CRLF)
+        ConsoleWrite($test.steps & @CRLF)
+
+        For $step In $test.steps
+            If $test.steps.Item($step)[1] Then
+                ConsoleWrite("+" & @TAB & $test.steps.Item($step)[0] & @TAB & "PASS" & @CRLF)
+            Else
+                ConsoleWrite("!" & @TAB & $test.steps.Item($step)[0] & @TAB & "FAIL" & @CRLF)
+            EndIf
+        Next
+    EndIf
     $this.tests.Add($this.testCount, $test.TestResult)
 EndFunc   ;==>_AddTest
 
