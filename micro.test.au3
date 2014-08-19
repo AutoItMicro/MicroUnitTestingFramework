@@ -41,7 +41,6 @@ Func assertFalse($this, $assertText, $falseAssertion)
 EndFunc
 
 Func assertEquals($this, $assertText, $first, $second)
-    ConsoleWrite($first = $second)
     Return $this.assertTrue($assertText,$first = $second)
 EndFunc
 
