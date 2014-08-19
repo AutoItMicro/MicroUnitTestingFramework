@@ -7,6 +7,8 @@ Func _test_($testName)
 		.AddMethod("addStep","addStep")
 		.AddMethod("countSteps","countSteps")
 		.AddMethod("assertTrue","assertTrue")
+		.AddMethod("assertFalse","assertFalse")
+		.AddMethod("assertEquals","assertEquals")
         .AddMethod("stepPassed","stepPassed")
         .AddMethod("stepFailed","stepFailed")
         .AddMethod("duration","duration")
@@ -39,6 +41,7 @@ Func assertFalse($this, $assertText, $falseAssertion)
 EndFunc
 
 Func assertEquals($this, $assertText, $first, $second)
+    ConsoleWrite($first = $second)
     Return $this.assertTrue($assertText,$first = $second)
 EndFunc
 

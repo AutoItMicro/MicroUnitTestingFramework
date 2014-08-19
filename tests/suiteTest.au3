@@ -27,7 +27,7 @@ EndFunc
 
 Func assertEqualsPass()
     $test = _test_("assertEquals returns True")
-	$test.assertFalse("1, 1", 1, 1)
+	$test.assertEquals("1, 1", 1, 1)
     Return $test
 EndFunc
 #EndRegion
