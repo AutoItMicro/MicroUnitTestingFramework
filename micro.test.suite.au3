@@ -1,4 +1,4 @@
-Func _testSuite_($suiteName)
+Func newTestSuite($suiteName)
 	Local $oClassObject = _AutoItObject_Class()
 	$oClassObject.Create()
 

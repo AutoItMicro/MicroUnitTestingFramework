@@ -3,7 +3,7 @@
 #EndRegion
 
 #Region Test suite definition
-Local $testSuite = _testSuite_("Test Suite Test")
+Local $testSuite = newTestSuite("Assert Suite Test")
 
 If $CmdLine[0] > 0 Then
     $testSuite.ci = True
@@ -23,19 +23,19 @@ $testSuite.finish()
 
 #Region Test Functions
 Func assertTruePass()
-    $test = _test_("assertTrue Passes")
+    $test = newTest("assertTrue Passes")
 	$test.assertTrue("True", True)
     Return $test
 EndFunc
 
 Func assertFalsePass()
-    $test = _test_("assertFalse Passes")
+    $test = newTest("assertFalse Passes")
 	$test.assertFalse("False", False)
     Return $test
 EndFunc
 
 Func assertEqualsPass()
-    $test = _test_("assertEquals Passes")
+    $test = newTest("assertEquals Passes")
 	$test.assertEquals("1, 1", 1, 1)
 	$test.assertEquals('"a", "a"', "a", "a")
 	$test.assertEquals("-13, -13", -13, -13)
@@ -46,7 +46,7 @@ Func assertEqualsPass()
 EndFunc
 
 Func assertNotEqualsPass()
-    $test = _test_("assertNotEquals Passes")
+    $test = newTest("assertNotEquals Passes")
 	$test.assertNotEquals("1, 2", 1, 2)
 	$test.assertNotEquals('"a", "b"', "a", "b")
 	$test.assertNotEquals("-13, 13", -13, 13)
@@ -57,7 +57,7 @@ Func assertNotEqualsPass()
 EndFunc
 
 Func assertTrueFail()
-    $test = _test_("assertTrue Fails")
+    $test = newTest("assertTrue Fails")
 	$test.assertTrue("False", False)
     If $test.stepsFailed = 1 Then
         $test.pass = True
@@ -66,7 +66,7 @@ Func assertTrueFail()
 EndFunc
 
 Func assertFalseFail()
-    $test = _test_("assertFalse Fails")
+    $test = newTest("assertFalse Fails")
 	$test.assertFalse("True", True)
     If $test.stepsFailed = 1 Then
         $test.pass = True
@@ -75,7 +75,7 @@ Func assertFalseFail()
 EndFunc
 
 Func assertEqualsFail()
-    $test = _test_("assertEquals Fails")
+    $test = newTest("assertEquals Fails")
 	$test.assertEquals("1, 2", 1, 2)
 	$test.assertEquals('"a", "b"', "a", "b")
 	$test.assertEquals("-13, 13", -13, 13)
@@ -89,7 +89,7 @@ Func assertEqualsFail()
 EndFunc
 
 Func assertNotEqualsFail()
-    $test = _test_("assertNotEquals Fails")
+    $test = newTest("assertNotEquals Fails")
 	$test.assertNotEquals("1, 1", 1, 1)
 	$test.assertNotEquals('"a", "a"', "a", "a")
 	$test.assertNotEquals("-13, -13", -13, -13)
