@@ -7,6 +7,9 @@ Func _test_($testName)
 		.AddMethod("addStep","addStep")
 		.AddMethod("countSteps","countSteps")
 		.AddMethod("assertTrue","assertTrue")
+		.AddMethod("assertFalse","assertFalse")
+		.AddMethod("assertEquals","assertEquals")
+		.AddMethod("assertNotEquals","assertNotEquals")
         .AddMethod("stepPassed","stepPassed")
         .AddMethod("stepFailed","stepFailed")
         .AddMethod("duration","duration")
@@ -19,8 +22,8 @@ Func _test_($testName)
 		.AddProperty("stepCount",$ELSCOPE_PRIVATE,0)
 		.AddProperty("pass",$ELSCOPE_PUBLIC,True)
         .AddProperty("testResult",$ELSCOPE_PUBLIC,"Passed") ;0 Failed - 1 OK
-		.AddProperty("testStepsFailed",$ELSCOPE_PUBLIC,0)
-		.AddProperty("testStepsPassed",$ELSCOPE_PUBLIC,0)
+		.AddProperty("stepsFailed",$ELSCOPE_PUBLIC,0)
+		.AddProperty("stepsPassed",$ELSCOPE_PUBLIC,0)
         .AddProperty("beginTime",$ELSCOPE_PRIVATE,_NowCalc())
         .AddProperty("endTime",$ELSCOPE_PRIVATE,_NowCalc())
 	EndWith
@@ -31,10 +34,19 @@ EndFunc
 Func assertTrue($this, $assertText, $assertion)
 	$this.addStep($assertText, $assertion)
     $this.endTime = _NowCalc()
+    Return $assertion
 EndFunc
 
 Func assertFalse($this, $assertText, $falseAssertion)
-    $this.assertTrue($assertText,Not $falseAssertion)
+    Return $this.assertTrue($assertText, Not $falseAssertion)
+EndFunc
+
+Func assertEquals($this, $assertText, $first, $second)
+    Return $this.assertTrue($assertText, $first = $second)
+EndFunc
+
+Func assertNotEquals($this, $assertText, $first, $second)
+    Return $this.assertFalse($assertText, $first = $second)
 EndFunc
 
 Func addStep($this,$stepText,$assertion)
@@ -52,11 +64,11 @@ EndFunc
 Func stepFailed($this)
     $this.pass = False
     $this.testResult = "Failed"
-	$this.testStepFailed = $this.testStepFailed + 1
+	$this.stepsFailed = $this.stepsFailed + 1
 EndFunc
 
 Func stepPassed($this)
-    $this.testStepPassed = $this.testStepPassed + 1
+    $this.stepsPassed = $this.stepsPassed + 1
 EndFunc
 
 Func duration($this)

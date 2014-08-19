@@ -13,8 +13,24 @@ testing the fixtures of your code. The best part is that you will know when a ch
 another part of your script or program unexpectedly, and not after you ship it to a client who 
 can't use it. 
 
+Using Micro
+-----------
+
+To use micro you simply need to add it as a submodule to the project you'd like to test.
+
+    cd <project you would like to test's root>
+    git submodule add git://github.com/AutoItMicor/MicroUnitTestingFramework.git
+    git submodule init --recursive
+    git submodule update --recursive
+
+now if you add micro/micro.au3 as an include in your test script you are good to go.
+
+### Notes
+
 Micro is currently being re-written and is not accepting blanked pull requests. if you would like 
 to contribute, please contact @KyleChamberlin for more information on how to help contribute 
 during this re-write.
+
+##### Attribution
 
 This code was originally forked from http://sourceforge.net/projects/microtest/

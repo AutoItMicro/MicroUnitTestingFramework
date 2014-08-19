@@ -18,6 +18,7 @@ Func _testSuite_($suiteName)
 		.AddProperty("ci", $ELSCOPE_PUBLIC, False)
 		.AddProperty("format", $ELSCOPE_PUBLIC, "html")
 		.AddProperty("tests", $ELSCOPE_PUBLIC, $dicTest)
+		.AddProperty("testCount", $ELSCOPE_PUBLIC, 0)
 		.AddProperty("testsPassed", $ELSCOPE_PUBLIC, 0)
 		.AddProperty("testsFailed", $ELSCOPE_PUBLIC, 0)
 		.AddProperty("pass", $ELSCOPE_PUBLIC, True) ;0 Failed - 1 OK
@@ -28,7 +29,7 @@ Func _testSuite_($suiteName)
 	EndWith
 
 	Return $oClassObject.Object
-EndFunc   ;==>_testSuite_
+EndFunc
 
 Func addTest($this, $test)
 	$this.testCount = $this.testCount + 1
@@ -39,9 +40,25 @@ Func addTest($this, $test)
 		$this.testFailed()
 	EndIf
 
-    appveyorAddTest($test.name, $test.testResult, $test.duration)
+    If $this.ci Then
+        appveyorAddTest($test.name, $test.testResult, $test.duration)
+    Else
+
+        ConsoleWrite(@CRLF & _colorTagFor($test.pass) & "(" & $this.testCount & ") " & $test.name & @CRLF)
+        ConsoleWrite($test.steps & @CRLF)
+
+        For $step In $test.steps
+            If $test.steps.Item($step)[1] Then
+                ConsoleWrite(_colorTagFor($test.steps.Item($step)[1]) & @TAB & "PASS" & @TAB & $test.steps.Item($step)[0] & @CRLF)
+            Else
+                ConsoleWrite(_colorTagFor($test.steps.Item($step)[1]) & @TAB & "FAIL" & @TAB & $test.steps.Item($step)[0] & @CRLF)
+            EndIf
+        Next
+
+
+    EndIf
     $this.tests.Add($this.testCount, $test.TestResult)
-EndFunc   ;==>_AddTest
+EndFunc
 
 Func testPassed($this)
     $this.testsPassed = $this.testsPassed + 1
@@ -58,18 +75,22 @@ EndFunc
 
 Func finish($this)
 	$this.endTime = _NowCalc()
-
-
+    ConsoleWrite(@CRLF & @CRLF)
     If $this.pass Then
         Exit 0
     Else
         Exit 1
     EndIf
-EndFunc   ;==>_Stop
+EndFunc
 
 Func suiteDuration($this)
     Return $this.endTime - $this.beginTime
 EndFunc
 
-
-
+Func _colorTagFor($boolean)
+    If $boolean Then
+        Return "+"
+    Else
+        Return "!"
+    EndIf
+EndFunc
