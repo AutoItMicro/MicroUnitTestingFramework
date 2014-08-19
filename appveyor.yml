@@ -1,7 +1,8 @@
-install:
-  - cinst autoit.commandline
-
 version: 1.9.alpha.{build}
+
+
+init:
+  - Start-Process -NoNewWindow cinst autoit.commandline
 
 build: off
 
