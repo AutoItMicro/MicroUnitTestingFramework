@@ -28,6 +28,11 @@ EndFunc
 Func assertEqualsPass()
     $test = _test_("assertEquals returns True")
 	$test.assertEquals("1, 1", 1, 1)
+	$test.assertEquals('"a", "a"', "a", "a")
+	$test.assertEquals("-13, -13", -13, -13)
+	$test.assertEquals('"-13", "-13"', "-13", "-13")
+	$test.assertEquals('True, True', True, True)
+	$test.assertEquals('False, False', False, False)
     Return $test
 EndFunc
 #EndRegion
