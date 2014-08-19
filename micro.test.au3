@@ -31,10 +31,15 @@ EndFunc
 Func assertTrue($this, $assertText, $assertion)
 	$this.addStep($assertText, $assertion)
     $this.endTime = _NowCalc()
+    Return $assertion
 EndFunc
 
 Func assertFalse($this, $assertText, $falseAssertion)
-    $this.assertTrue($assertText,Not $falseAssertion)
+    Return $this.assertTrue($assertText,Not $falseAssertion)
+EndFunc
+
+Func assertEquals($this, $assertText, $first, $second)
+    Return $this.assertTrue($assertText,$first = $second)
 EndFunc
 
 Func addStep($this,$stepText,$assertion)

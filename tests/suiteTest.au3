@@ -7,6 +7,7 @@ Local $testSuite = _testSuite_("Test Suite Test")
 
 $testSuite.addTest(assertTruePass())
 $testSuite.addTest(assertFalsePass())
+$testSuite.addTest(assertEqualsPass())
 
 $testSuite.finish()
 #EndRegion
@@ -21,6 +22,12 @@ EndFunc
 Func assertFalsePass()
     $test = _test_("assertFalse(False) returns True")
 	$test.assertFalse("False", False)
+    Return $test
+EndFunc
+
+Func assertEqualsPass()
+    $test = _test_("assertEquals returns True")
+	$test.assertFalse("1, 1", 1, 1)
     Return $test
 EndFunc
 #EndRegion
