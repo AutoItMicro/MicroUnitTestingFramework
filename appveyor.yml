@@ -2,7 +2,7 @@ version: 1.9.alpha.{build}
 
 
 init:
-  - cmd: START /B cinst autoit.commandline
+  - cinst autoit.commandline
 
 build: off
 
