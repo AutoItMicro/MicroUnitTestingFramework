@@ -49,9 +49,9 @@ Func addTest($this, $test)
 
         For $step In $test.steps
             If $test.steps.Item($step)[1] Then
-                ConsoleWrite("+" & @TAB & "PASS" & @TAB & $test.steps.Item($step)[0] & @CRLF)
+                ConsoleWrite(_colorTagFor($test.steps.Item($step)[1]) & @TAB & "PASS" & @TAB & $test.steps.Item($step)[0] & @CRLF)
             Else
-                ConsoleWrite("!" & @TAB & "FAIL" & @TAB & $test.steps.Item($step)[0] & @CRLF)
+                ConsoleWrite(_colorTagFor($test.steps.Item($step)[1]) & @TAB & "FAIL" & @TAB & $test.steps.Item($step)[0] & @CRLF)
             EndIf
         Next
 

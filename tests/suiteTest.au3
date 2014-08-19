@@ -59,12 +59,18 @@ EndFunc
 Func assertTrueFail()
     $test = _test_("assertTrue Fails")
 	$test.assertTrue("False", False)
+    If $test.stepsFailed = 1 Then
+        $test.pass = True
+    EndIf
     Return $test
 EndFunc
 
 Func assertFalseFail()
     $test = _test_("assertFalse Fails")
 	$test.assertFalse("True", True)
+    If $test.stepsFailed = 1 Then
+        $test.pass = True
+    EndIf
     Return $test
 EndFunc
 
@@ -76,6 +82,9 @@ Func assertEqualsFail()
 	$test.assertEquals('"13", "-13"', "13", "-13")
 	$test.assertEquals('True, False', True, False)
 	$test.assertEquals('False, True', False, True)
+    If $test.stepsFailed = 6 Then
+        $test.pass = True
+    EndIf
     Return $test
 EndFunc
 
@@ -87,6 +96,9 @@ Func assertNotEqualsFail()
 	$test.assertNotEquals('"-13", "-13"', "-13", "-13")
 	$test.assertNotEquals('True, True', True, True)
 	$test.assertNotEquals('False, False', False, False)
+    If $test.stepsFailed = 6 Then
+        $test.pass = True
+    EndIf
     Return $test
 EndFunc
 #EndRegion

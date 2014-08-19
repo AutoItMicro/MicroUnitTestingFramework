@@ -22,8 +22,8 @@ Func _test_($testName)
 		.AddProperty("stepCount",$ELSCOPE_PRIVATE,0)
 		.AddProperty("pass",$ELSCOPE_PUBLIC,True)
         .AddProperty("testResult",$ELSCOPE_PUBLIC,"Passed") ;0 Failed - 1 OK
-		.AddProperty("testStepsFailed",$ELSCOPE_PUBLIC,0)
-		.AddProperty("testStepsPassed",$ELSCOPE_PUBLIC,0)
+		.AddProperty("stepsFailed",$ELSCOPE_PUBLIC,0)
+		.AddProperty("stepsPassed",$ELSCOPE_PUBLIC,0)
         .AddProperty("beginTime",$ELSCOPE_PRIVATE,_NowCalc())
         .AddProperty("endTime",$ELSCOPE_PRIVATE,_NowCalc())
 	EndWith
@@ -64,11 +64,11 @@ EndFunc
 Func stepFailed($this)
     $this.pass = False
     $this.testResult = "Failed"
-	$this.testStepFailed = $this.testStepFailed + 1
+	$this.stepsFailed = $this.stepsFailed + 1
 EndFunc
 
 Func stepPassed($this)
-    $this.testStepPassed = $this.testStepPassed + 1
+    $this.stepsPassed = $this.stepsPassed + 1
 EndFunc
 
 Func duration($this)
