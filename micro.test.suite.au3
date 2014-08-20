@@ -41,7 +41,7 @@ Func addTest($this, $test)
 	EndIf
 
     If $this.ci Then
-        appveyorAddTest($test.name, $test.testResult, $test.duration)
+        appveyorAddTest($test.name, $test.testResult, $test.duration())
     Else
 
         ConsoleWrite(@CRLF & _colorTagFor($test.pass) & "(" & $this.testCount & ") " & $test.name & @CRLF)
