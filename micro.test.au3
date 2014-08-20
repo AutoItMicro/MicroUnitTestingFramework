@@ -74,3 +74,4 @@ EndFunc
 Func duration($this)
     Return $this.endTime - $this.beginTime
 EndFunc
+
