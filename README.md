@@ -19,11 +19,30 @@ Using Micro
 To use micro you simply need to add it as a submodule to the project you'd like to test.
 
     cd <project you would like to test's root>
-    git submodule add git://github.com/AutoItMicor/MicroUnitTestingFramework.git
-    git submodule init --recursive
-    git submodule update --recursive
+    git submodule add git://github.com/AutoItMicor/MicroUnitTestingFramework.git micro
+    git submodule update --init --recursive
 
 now if you add micro/micro.au3 as an include in your test script you are good to go.
+
+### Writing Tests
+
+To begin using Micro to test you just need to write your first test. We suggest writing a function for each test like this:
+
+```AutoIt
+Func myFunctionTest()
+	$test = newTest("myFunction performs like this")
+	$test.assertEquals('myFunction($someInput) returns "This"', myFunction($someInput), "This")
+	Return $test
+EndFunc
+```
+
+Now we need a testSuite for this test, so let's make one and add this test to it.
+
+```AutoIt
+$testSuite = newTestSuite("My awesome test suite")
+$testSuite.addTest(myFunctionTest())
+$testSuite.finish()
+```
 
 ### Notes
 

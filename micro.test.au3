@@ -1,4 +1,4 @@
-Func _test_($testName)
+Func newTest($testName)
 	$oClassObject = _AutoItObject_Class()
 	$oClassObject.Create()
     $dicSteps = ObjCreate("Scripting.Dictionary")
@@ -16,7 +16,7 @@ Func _test_($testName)
 	EndWith
 
 	With $oClassObject
-		.AddProperty("_type_", $ELSCOPE_PUBLIC, "_test_") ;Object type
+		.AddProperty("_type_", $ELSCOPE_PUBLIC, "test") ;Object type
 		.AddProperty("name", $ELSCOPE_PUBLIC,$testName)
 		.AddProperty("steps", $ELSCOPE_PUBLIC, $dicSteps) ;Dictionary with test case steps
 		.AddProperty("stepCount",$ELSCOPE_PRIVATE,0)
@@ -74,3 +74,4 @@ EndFunc
 Func duration($this)
     Return $this.endTime - $this.beginTime
 EndFunc
+
