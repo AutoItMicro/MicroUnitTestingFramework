@@ -51,7 +51,7 @@ $testSuite.finish()
 
 ### Notes
 
-Micro is currently being re-written and is not accepting blanked pull requests. if you would like 
+Micro is currently being re-written and is not accepting blanket pull requests. if you would like 
 to contribute, please contact @KyleChamberlin for more information on how to help contribute 
 during this re-write.
 
