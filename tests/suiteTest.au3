@@ -57,6 +57,7 @@ Func assertNotEqualsPass()
 EndFunc
 
 Func assertTrueFail()
+    ;Testing that the Asserts fail properly
     $test = newTest("assertTrue Fails")
 	$test.assertTrue("False", False)
     If $test.stepsFailed = 1 Then
@@ -66,6 +67,7 @@ Func assertTrueFail()
 EndFunc
 
 Func assertFalseFail()
+    ;Testing that the Asserts fail properly
     $test = newTest("assertFalse Fails")
 	$test.assertFalse("True", True)
     If $test.stepsFailed = 1 Then
@@ -75,6 +77,7 @@ Func assertFalseFail()
 EndFunc
 
 Func assertEqualsFail()
+    ;Testing that the Asserts fail properly
     $test = newTest("assertEquals Fails")
 	$test.assertEquals("1, 2", 1, 2)
 	$test.assertEquals('"a", "b"', "a", "b")
@@ -82,6 +85,8 @@ Func assertEqualsFail()
 	$test.assertEquals('"13", "-13"', "13", "-13")
 	$test.assertEquals('True, False', True, False)
 	$test.assertEquals('False, True', False, True)
+    ;This is not normal for a test, I am only counting the failed steps
+    ;to verify that each step failed as expected.
     If $test.stepsFailed = 6 Then
         $test.pass = True
     EndIf
@@ -89,14 +94,16 @@ Func assertEqualsFail()
 EndFunc
 
 Func assertNotEqualsFail()
+    ;Testing that the Asserts fail properly
     $test = newTest("assertNotEquals Fails")
 	$test.assertNotEquals("1, 1", 1, 1)
 	$test.assertNotEquals('"a", "a"', "a", "a")
 	$test.assertNotEquals("-13, -13", -13, -13)
-    Sleep(30)
-	$test.assertNotEquals('"-13", "-13"', "-13", "-13")
+    $test.assertNotEquals('"-13", "-13"', "-13", "-13")
 	$test.assertNotEquals('True, True', True, True)
 	$test.assertNotEquals('False, False', False, False)
+    ;This is not normal for a test, I am only counting the failed steps
+    ;to verify that each step failed as expected.
     If $test.stepsFailed = 6 Then
         $test.pass = True
     EndIf

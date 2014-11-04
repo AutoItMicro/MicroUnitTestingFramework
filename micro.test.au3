@@ -16,7 +16,7 @@ Func newTest($testName)
 	EndWith
 
 	With $oClassObject
-		.AddProperty("_type_", $ELSCOPE_PUBLIC, "test") ;Object type
+		.AddProperty("_type_", $ELSCOPE_PUBLIC, "Test") ;Object type
 		.AddProperty("name", $ELSCOPE_PUBLIC,$testName)
 		.AddProperty("steps", $ELSCOPE_PUBLIC, $dicSteps) ;Dictionary with test case steps
 		.AddProperty("stepCount",$ELSCOPE_PRIVATE,0)

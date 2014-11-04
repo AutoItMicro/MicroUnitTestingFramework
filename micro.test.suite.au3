@@ -9,11 +9,12 @@ Func newTestSuite($suiteName)
 		.AddMethod("addTest", "AddTest")
 		.AddMethod("testPassed","testPassed")
         .AddMethod("testFailed","testFailed")
+        .AddMethod("reportTest","reportTest")
         .AddMethod("duration","suiteDuration")
 	EndWith
 
 	With $oClassObject
-		.AddProperty("_type_", $ELSCOPE_PUBLIC, "_testSuite_") ;Object type
+		.AddProperty("_type_", $ELSCOPE_PUBLIC, "TestSuite") ;Object type
 		.AddProperty("name", $ELSCOPE_PUBLIC, $suiteName)
 		.AddProperty("ci", $ELSCOPE_PUBLIC, False)
 		.AddProperty("format", $ELSCOPE_PUBLIC, "html")
@@ -40,23 +41,7 @@ Func addTest($this, $test)
 		$this.testFailed()
 	EndIf
 
-    If $this.ci Then
-        appveyorAddTest($test.name, $test.testResult, $test.duration())
-    Else
-
-        ConsoleWrite(@CRLF & _colorTagFor($test.pass) & "(" & $this.testCount & ") " & $test.name & @CRLF)
-        ConsoleWrite($test.steps & @CRLF)
-
-        For $step In $test.steps
-            If $test.steps.Item($step)[1] Then
-                ConsoleWrite(_colorTagFor($test.steps.Item($step)[1]) & @TAB & "PASS" & @TAB & $test.steps.Item($step)[0] & @CRLF)
-            Else
-                ConsoleWrite(_colorTagFor($test.steps.Item($step)[1]) & @TAB & "FAIL" & @TAB & $test.steps.Item($step)[0] & @CRLF)
-            EndIf
-        Next
-
-
-    EndIf
+    $this.reportTest($test)
     $this.tests.Add($this.testCount, $test.TestResult)
 EndFunc
 
@@ -92,5 +77,21 @@ Func _colorTagFor($boolean)
         Return "+"
     Else
         Return "!"
+    EndIf
+EndFunc
+
+Func reportTest($this, $test)
+    If $this.ci Then
+        appveyorAddTest($test.name, $test.testResult, $test.duration())
+    Else
+        ConsoleWrite(@CRLF & _colorTagFor($test.pass) & "(" & $this.testCount & ") " & $test.name & @CRLF)
+        ConsoleWrite($test.steps & @CRLF)
+        For $step In $test.steps
+            If $test.steps.Item($step)[1] Then
+                ConsoleWrite(_colorTagFor($test.steps.Item($step)[1]) & @TAB & "PASS" & @TAB & $test.steps.Item($step)[0] & @CRLF)
+            Else
+                ConsoleWrite(_colorTagFor($test.steps.Item($step)[1]) & @TAB & "FAIL" & @TAB & $test.steps.Item($step)[0] & @CRLF)
+            EndIf
+        Next
     EndIf
 EndFunc
