@@ -1,7 +1,7 @@
 Micro - The AutoIt Unit Testing Framework
 =========================================
 
-[![Build status](https://ci.appveyor.com/api/projects/status/bdbmu8v4dwmym6eb)](https://ci.appveyor.com/project/KyleChamberlin/microunittestingframework)
+[![Build status](https://img.shields.io/appveyor/ci/KyleChamberlin/microunittestingframework.svg?style=flat-square)](https://ci.appveyor.com/project/KyleChamberlin/microunittestingframework)
 [![Open Issues](https://img.shields.io/github/issues/AutoItMicro/MicroUnitTestingFramework.svg?style=flat-square)](http://waffle.io/AutoItMicro/MicroUnitTestingFramework)
 
 
