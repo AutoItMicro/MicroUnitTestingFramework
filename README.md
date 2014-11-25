@@ -2,9 +2,8 @@ Micro - The AutoIt Unit Testing Framework
 =========================================
 
 [![Build status](https://ci.appveyor.com/api/projects/status/bdbmu8v4dwmym6eb)](https://ci.appveyor.com/project/KyleChamberlin/microunittestingframework)
-[![Stories in Backlog](https://badge.waffle.io/AutoItMicro/MicroUnitTestingFramework.svg?label=Backlog&title=Backlog)](http://waffle.io/AutoItMicro/MicroUnitTestingFramework)
-[![Stories in Progress](https://badge.waffle.io/AutoItMicro/MicroUnitTestingFramework.svg?label=In%20Progress&title=In%20Progress)](http://waffle.io/AutoItMicro/MicroUnitTestingFramework)
-[![Stories in Ready](https://badge.waffle.io/AutoItMicro/MicroUnitTestingFramework.svg?label=ready&title=Ready)](http://waffle.io/AutoItMicro/MicroUnitTestingFramework)
+[![Open Issues](https://img.shields.io/github/issues/AutoItMicro/MicroUnitTestingFramework.svg?style=flat-square)](http://waffle.io/AutoItMicro/MicroUnitTestingFramework)
+
 
 Micro is a xUnit style testing framework design for use with AutoIt. The goal of Micro is to be
 easy to use and simple to integrate with continuous integration services.
