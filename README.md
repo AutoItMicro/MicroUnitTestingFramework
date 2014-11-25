@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/AutoItMicro/MicroUnitTestingFramework.png?label=ready&title=Ready)](https://waffle.io/AutoItMicro/MicroUnitTestingFramework)
 Micro - The AutoIt Unit Testing Framework
 =========================================
 
