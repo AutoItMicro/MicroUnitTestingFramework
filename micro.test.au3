@@ -34,8 +34,6 @@ Func newTest($testName)
 EndFunc
 
 Func assertTrue($this, $assertText, $assertion)
-    $this.expectedResult = $assertText
-    $this.recievedResult = $assertion
 	$this.addStep($assertText, $assertion)
     $this.endTime = _NowCalc()
     Return $assertion
