@@ -76,7 +76,7 @@ Func reportTest($this, $test)
     If $this.ci Then
         appveyorAddTest($test.name, $test.testResult, $test.duration())
     Else
-        ConsoleWrite(@CRLF & _colorTagFor($test.pass) & "(" & $this.testCount & ") " & $test.name & @CRLF)
+        ConsoleWrite(@CRLF & "(" & $this.testCount & ") " & $test.name & @CRLF)
         ConsoleWrite($test.steps & @CRLF)
         For $step In $test.steps
             If $test.steps.Item($step)[1] Then

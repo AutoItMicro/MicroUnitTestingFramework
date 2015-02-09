@@ -22,16 +22,20 @@ Func newTest($testName)
 		.AddProperty("stepCount",$ELSCOPE_PRIVATE,0)
 		.AddProperty("pass",$ELSCOPE_PUBLIC,True)
         .AddProperty("testResult",$ELSCOPE_PUBLIC,"Passed") ;0 Failed - 1 OK
+        .AddProperty("expectedResult",$ELSCOPE_PUBLIC,"")
+        .AddProperty("recievedResult",$ELSCOPE_PUBLIC,"")
 		.AddProperty("stepsFailed",$ELSCOPE_PUBLIC,0)
 		.AddProperty("stepsPassed",$ELSCOPE_PUBLIC,0)
         .AddProperty("beginTime",$ELSCOPE_PRIVATE,_NowCalc())
         .AddProperty("endTime",$ELSCOPE_PRIVATE,_NowCalc())
-	EndWith
+    EndWith
 
 	Return $oClassObject.Object
 EndFunc
 
 Func assertTrue($this, $assertText, $assertion)
+    $this.expectedResult = $assertText
+    $this.recievedResult = $assertion
 	$this.addStep($assertText, $assertion)
     $this.endTime = _NowCalc()
     Return $assertion
@@ -42,6 +46,8 @@ Func assertFalse($this, $assertText, $falseAssertion)
 EndFunc
 
 Func assertEquals($this, $assertText, $first, $second)
+    $this.expectedResult = $second
+    $this.recievedResult = $first
     Return $this.assertTrue($assertText, $first = $second)
 EndFunc
 
