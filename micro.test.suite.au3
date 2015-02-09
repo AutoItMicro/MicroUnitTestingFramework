@@ -72,14 +72,6 @@ Func suiteDuration($this)
     Return $this.endTime - $this.beginTime
 EndFunc
 
-Func _colorTagFor($boolean)
-    If $boolean Then
-        Return "+"
-    Else
-        Return "!"
-    EndIf
-EndFunc
-
 Func reportTest($this, $test)
     If $this.ci Then
         appveyorAddTest($test.name, $test.testResult, $test.duration())
@@ -88,9 +80,11 @@ Func reportTest($this, $test)
         ConsoleWrite($test.steps & @CRLF)
         For $step In $test.steps
             If $test.steps.Item($step)[1] Then
-                ConsoleWrite(_colorTagFor($test.steps.Item($step)[1]) & @TAB & "PASS" & @TAB & $test.steps.Item($step)[0] & @CRLF)
+                ConsoleWrite("+" & @TAB & "PASS" & @TAB & $test.steps.Item($step)[0] & @CRLF)
             Else
-                ConsoleWrite(_colorTagFor($test.steps.Item($step)[1]) & @TAB & "FAIL" & @TAB & $test.steps.Item($step)[0] & @CRLF)
+                ConsoleWrite("!" & @TAB & "FAIL" & @TAB & $test.steps.Item($step)[0] & @CRLF)
+                ConsoleWrite("!" & @TAB & "  Expected: " & @TAB & $test.expectedResult & @CRLF)
+                ConsoleWrite("!" & @TAB & "  Received: " & @TAB & $test.receivedResult & @CRLF)
             EndIf
         Next
     EndIf
