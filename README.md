@@ -56,7 +56,3 @@ $testSuite.finish()
 Micro is currently being re-written and is not accepting blanket pull requests. if you would like 
 to contribute, please contact @KyleChamberlin for more information on how to help contribute 
 during this re-write.
-
-##### Attribution
-
-This code was originally forked from http://sourceforge.net/projects/microtest/
